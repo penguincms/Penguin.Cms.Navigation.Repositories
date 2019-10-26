@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Penguin.Cms.Navigation.Repositories.Local</name>
+        <name>Penguin.Cms.Navigation.Repositories</name>
     </assembly>
     <members>
         <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.AddChild(System.String,Penguin.Cms.Navigation.NavigationMenuItem)">
