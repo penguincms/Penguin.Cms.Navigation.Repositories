@@ -5,11 +5,13 @@
     <PackageProjectUrl>https://github.com/penguincms/Penguin.Cms.Navigation.Repositories</PackageProjectUrl>
     <Version>1.0.0</Version>
     <Description>Not Available</Description>
+    <AssemblyName>Penguin.Cms.Navigation.Repositories</AssemblyName>
+    <RootNamespace>Penguin.Cms.Navigation.Repositories</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Penguin.Cms.Repositories" Version="3.0.4-T9M1HHH" />
-    <PackageReference Include="Penguin.Extensions.Collections" Version="2.0.4-T9M1HHH" />
-    <PackageReference Include="Penguin.Security.Abstractions" Version="2.0.1-T9M1HHH" />
-    <PackageReference Include="Penguin.Cms.Navigation" Version="1.0.1-T9M1HHH" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="3.0.4-T9M2XAX" />
+    <PackageReference Include="Penguin.Extensions.Collections" Version="2.0.4-T9M2XAX" />
+    <PackageReference Include="Penguin.Security.Abstractions" Version="2.0.1-T9M2XAX" />
+    <PackageReference Include="Penguin.Cms.Navigation" Version="1.0.1-T9M2XAX" />
   </ItemGroup>
 </Project>
