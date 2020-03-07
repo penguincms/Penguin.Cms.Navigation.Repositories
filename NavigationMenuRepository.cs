@@ -2,7 +2,6 @@
 using Penguin.Extensions.Collections;
 using Penguin.Messaging.Core;
 using Penguin.Messaging.Persistence.Messages;
-using Penguin.Navigation.Abstractions;
 using Penguin.Navigation.Abstractions.Extensions;
 using Penguin.Persistence.Abstractions.Interfaces;
 using Penguin.Security.Abstractions.Extensions;
@@ -20,14 +19,14 @@ namespace Penguin.Cms.Navigation.Repositories
     {
         private Func<NavigationMenuItem, bool> Filter => (entity) =>
          {
-             return SecurityProvider.TryCheckAccess(entity);
+             return this.SecurityProvider.TryCheckAccess(entity);
          };
 
         private ISecurityProvider<NavigationMenuItem> SecurityProvider { get; set; }
 
         public NavigationMenuRepository(IPersistenceContext<NavigationMenuItem> dbContext, ISecurityProvider<NavigationMenuItem> securityProvider = null, MessageBus messageBus = null) : base(dbContext, messageBus)
         {
-            SecurityProvider = securityProvider;
+            this.SecurityProvider = securityProvider;
         }
 
         public override void AcceptMessage(Updating<NavigationMenuItem> update)
@@ -76,13 +75,14 @@ namespace Penguin.Cms.Navigation.Repositories
             }
             else
             {
-                Func<NavigationMenuItem, IEnumerable<NavigationMenuItem>> GetChildren = (target) => this.Where(n => n.Parent != null && n.Parent.Uri == target.Uri).ToList();
-
                 this.Update(toUpdate.Merge(entity));
             }
         }
 
-        public NavigationMenuItem GetByHref(string pathAndQuery) => this.Where(n => n.Href == pathAndQuery).FirstOrDefault();
+        public NavigationMenuItem GetByHref(string pathAndQuery)
+        {
+            return this.Where(n => n.Href == pathAndQuery).FirstOrDefault();
+        }
 
         public NavigationMenuItem GetByName(string name)
         {
@@ -96,14 +96,26 @@ namespace Penguin.Cms.Navigation.Repositories
             return null;
         }
 
-        public List<NavigationMenuItem> GetByParentId(int parentId) => this.Where(n => n.Parent != null && n.Parent._Id == parentId).ToList(this.Filter);
+        public List<NavigationMenuItem> GetByParentId(int parentId)
+        {
+            return this.Where(n => n.Parent != null && n.Parent._Id == parentId).ToList(this.Filter);
+        }
 
         [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
-        public NavigationMenuItem GetByUri(string uri) => this.Where(n => n.Uri == uri).FirstOrDefault(this.Filter);
+        public NavigationMenuItem GetByUri(string uri)
+        {
+            return this.Where(n => n.Uri == uri).FirstOrDefault(this.Filter);
+        }
 
-        public NavigationMenuItem GetRootByName(string name) => this.RecursiveFill(this.Where(n => n.Name == name && n.Parent == null).FirstOrDefault(this.Filter));
+        public NavigationMenuItem GetRootByName(string name)
+        {
+            return this.RecursiveFill(this.Where(n => n.Name == name && n.Parent == null).FirstOrDefault(this.Filter));
+        }
 
-        public List<NavigationMenuItem> GetRootMenus() => this.Where(n => n.Parent == null).ToList().Where(this.Filter).Select(n => this.RecursiveFill(n)).ToList();
+        public List<NavigationMenuItem> GetRootMenus()
+        {
+            return this.Where(n => n.Parent == null).ToList().Where(this.Filter).Select(n => this.RecursiveFill(n)).ToList();
+        }
 
         private NavigationMenuItem RecursiveFill(NavigationMenuItem navigationMenuItem, List<NavigationMenuItem> AllNavigationMenus = null)
         {
