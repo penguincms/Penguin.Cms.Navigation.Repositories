@@ -13,5 +13,52 @@
             <param name="ParentUri"></param>
             <param name="child"></param>
         </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.AddIfNew(Penguin.Cms.Navigation.NavigationMenuItem)">
+            <summary>
+            Adds a new entity if none with matching URI exists, otherwise merges with the existing menu
+            </summary>
+            <param name="entity">The Navigation Menu Item to add or use as a merge source</param>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetByHref(System.String)">
+            <summary>
+            Gets a navigation menu item with a matching href
+            </summary>
+            <param name="pathAndQuery">The href to search for</param>
+            <returns>A matching navigation menu item or null</returns>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetByName(System.String)">
+            <summary>
+            Gets a navigation menu item by name
+            </summary>
+            <param name="name">The name of the navigation menu item to get</param>
+            <returns>A navigation menu item with a matching name, or null</returns>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetByParentId(System.Int32)">
+            <summary>
+            Gets the child list of navigation menu items for the parent with the given Id
+            </summary>
+            <param name="parentId">The Id of the navigation menu item to get the children of</param>
+            <returns>The child list of navigation menu items for the parent with the given Id</returns>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetByUri(System.String)">
+            <summary>
+            Gets a navigation menu item by URI
+            </summary>
+            <param name="uri">The URI to search for</param>
+            <returns>A navigation menu item with matching URI, or null</returns>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetRootByName(System.String)">
+            <summary>
+            Returns a root navigation menu item with a matching name, or null
+            </summary>
+            <param name="name">The name of the navigation menu item to get</param>
+            <returns>A root navigation menu item with a matching name, or null</returns>
+        </member>
+        <member name="M:Penguin.Cms.Navigation.Repositories.NavigationMenuRepository.GetRootMenus">
+            <summary>
+            Gets all root menus
+            </summary>
+            <returns>A recursive list of root menus</returns>
+        </member>
     </members>
 </doc>

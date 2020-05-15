@@ -58,6 +58,10 @@ namespace Penguin.Cms.Navigation.Repositories
             this.AddOrUpdate(child);
         }
 
+        /// <summary>
+        /// Adds a new entity if none with matching URI exists, otherwise merges with the existing menu
+        /// </summary>
+        /// <param name="entity">The Navigation Menu Item to add or use as a merge source</param>
         public void AddIfNew(NavigationMenuItem entity)
         {
             if (entity is null)
@@ -79,11 +83,21 @@ namespace Penguin.Cms.Navigation.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets a navigation menu item with a matching href
+        /// </summary>
+        /// <param name="pathAndQuery">The href to search for</param>
+        /// <returns>A matching navigation menu item or null</returns>
         public NavigationMenuItem GetByHref(string pathAndQuery)
         {
             return this.Where(n => n.Href == pathAndQuery).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Gets a navigation menu item by name
+        /// </summary>
+        /// <param name="name">The name of the navigation menu item to get</param>
+        /// <returns>A navigation menu item with a matching name, or null</returns>
         public NavigationMenuItem GetByName(string name)
         {
             NavigationMenuItem topLevel = this.Where(n => n.Name == name).FirstOrDefault(this.Filter);
@@ -96,22 +110,41 @@ namespace Penguin.Cms.Navigation.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Gets the child list of navigation menu items for the parent with the given Id
+        /// </summary>
+        /// <param name="parentId">The Id of the navigation menu item to get the children of</param>
+        /// <returns>The child list of navigation menu items for the parent with the given Id</returns>
         public List<NavigationMenuItem> GetByParentId(int parentId)
         {
             return this.Where(n => n.Parent != null && n.Parent._Id == parentId).ToList(this.Filter);
         }
 
+        /// <summary>
+        /// Gets a navigation menu item by URI
+        /// </summary>
+        /// <param name="uri">The URI to search for</param>
+        /// <returns>A navigation menu item with matching URI, or null</returns>
         [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
         public NavigationMenuItem GetByUri(string uri)
         {
             return this.Where(n => n.Uri == uri).FirstOrDefault(this.Filter);
         }
 
+        /// <summary>
+        /// Returns a root navigation menu item with a matching name, or null
+        /// </summary>
+        /// <param name="name">The name of the navigation menu item to get</param>
+        /// <returns>A root navigation menu item with a matching name, or null</returns>
         public NavigationMenuItem GetRootByName(string name)
         {
             return this.RecursiveFill(this.Where(n => n.Name == name && n.Parent == null).FirstOrDefault(this.Filter));
         }
 
+        /// <summary>
+        /// Gets all root menus
+        /// </summary>
+        /// <returns>A recursive list of root menus</returns>
         public List<NavigationMenuItem> GetRootMenus()
         {
             return this.Where(n => n.Parent == null).ToList().Where(this.Filter).Select(n => this.RecursiveFill(n)).ToList();
