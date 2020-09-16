@@ -10,9 +10,9 @@
     <DocumentationFile>Penguin.Cms.Navigation.Repositories.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Penguin.Security.Abstractions" Version="5.0.1-TA29X8Y" />
-    <PackageReference Include="Penguin.Extensions.Collections" Version="5.0.1-TA29X8Y" />
-    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.1-TA29X8Y" />
-    <PackageReference Include="Penguin.Cms.Navigation" Version="5.0.1-TA29X8Y" />
+    <PackageReference Include="Penguin.Security.Abstractions" Version="5.0.1-TA2MS78" />
+    <PackageReference Include="Penguin.Extensions.Collections" Version="5.0.1-TA2MS78" />
+    <PackageReference Include="Penguin.Cms.Repositories" Version="5.0.1-TA2MS78" />
+    <PackageReference Include="Penguin.Cms.Navigation" Version="5.0.1-TA2MS78" />
   </ItemGroup>
 </Project>
