@@ -13,7 +13,6 @@ using System.Linq;
 
 namespace Penguin.Cms.Navigation.Repositories
 {
-    [SuppressMessage("Naming", "CA1710:Identifiers should have correct suffix")]
     public class NavigationMenuRepository : AuditableEntityRepository<NavigationMenuItem>
 
     {
