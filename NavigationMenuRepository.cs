@@ -16,10 +16,7 @@ namespace Penguin.Cms.Navigation.Repositories
     public class NavigationMenuRepository : AuditableEntityRepository<NavigationMenuItem>
 
     {
-        private Func<NavigationMenuItem, bool> Filter => (entity) =>
-         {
-             return this.SecurityProvider.TryCheckAccess(entity);
-         };
+        private Func<NavigationMenuItem, bool> Filter => (entity) => this.SecurityProvider.TryCheckAccess(entity);
 
         private ISecurityProvider<NavigationMenuItem> SecurityProvider { get; set; }
 
@@ -47,7 +44,7 @@ namespace Penguin.Cms.Navigation.Repositories
         /// </summary>
         /// <param name="ParentUri"></param>
         /// <param name="child"></param>
-        [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
+        
         public void AddChild(string ParentUri, NavigationMenuItem child)
         {
             NavigationMenuItem Parent = this.Where(n => n.Uri == ParentUri).FirstOrDefault();
@@ -124,7 +121,6 @@ namespace Penguin.Cms.Navigation.Repositories
         /// </summary>
         /// <param name="uri">The URI to search for</param>
         /// <returns>A navigation menu item with matching URI, or null</returns>
-        [SuppressMessage("Design", "CA1054:Uri parameters should not be strings")]
         public NavigationMenuItem GetByUri(string uri)
         {
             return this.Where(n => n.Uri == uri).FirstOrDefault(this.Filter);
@@ -159,7 +155,7 @@ namespace Penguin.Cms.Navigation.Repositories
             {
                 thisChild.Children = AllItems[thisChild._Id].Where(this.Filter).ToList();
 
-                thisChild.Children.OrderBy(n => n.Ordinal);
+                _ = thisChild.Children.OrderBy(n => n.Ordinal);
 
                 return thisChild.Children;
             });
