@@ -15,25 +15,25 @@ namespace Penguin.Cms.Navigation.Repositories
     public class NavigationMenuRepository : AuditableEntityRepository<NavigationMenuItem>
 
     {
-        private Func<NavigationMenuItem, bool> Filter => (entity) => this.SecurityProvider.TryCheckAccess(entity);
+        private Func<NavigationMenuItem, bool> Filter => (entity) => SecurityProvider.TryCheckAccess(entity);
 
         private ISecurityProvider<NavigationMenuItem> SecurityProvider { get; set; }
 
         public NavigationMenuRepository(IPersistenceContext<NavigationMenuItem> dbContext, ISecurityProvider<NavigationMenuItem> securityProvider = null, MessageBus messageBus = null) : base(dbContext, messageBus)
         {
-            this.SecurityProvider = securityProvider;
+            SecurityProvider = securityProvider;
         }
 
-        public override void AcceptMessage(Updating<NavigationMenuItem> update)
+        public override void AcceptMessage(Updating<NavigationMenuItem> updateMessage)
         {
-            if (update is null)
+            if (updateMessage is null)
             {
-                throw new System.ArgumentNullException(nameof(update));
+                throw new System.ArgumentNullException(nameof(updateMessage));
             }
 
-            update.Target.UpdateProperties();
+            updateMessage.Target.UpdateProperties();
 
-            base.AcceptMessage(update);
+            base.AcceptMessage(updateMessage);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Penguin.Cms.Navigation.Repositories
 
             Parent.AddChild(child);
 
-            this.AddOrUpdate(child);
+            AddOrUpdate(child);
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace Penguin.Cms.Navigation.Repositories
 
             if (toUpdate == null)
             {
-                this.Add(entity);
+                Add(entity);
             }
             else
             {
-                this.Update(toUpdate.Merge(entity));
+                Update(toUpdate.Merge(entity));
             }
         }
 
@@ -95,14 +95,9 @@ namespace Penguin.Cms.Navigation.Repositories
         /// <returns>A navigation menu item with a matching name, or null</returns>
         public NavigationMenuItem GetByName(string name)
         {
-            NavigationMenuItem topLevel = this.Where(n => n.Name == name).FirstOrDefault(this.Filter);
+            NavigationMenuItem topLevel = this.Where(n => n.Name == name).FirstOrDefault(Filter);
 
-            if (topLevel != null)
-            {
-                return this.RecursiveFill(topLevel);
-            }
-
-            return null;
+            return topLevel != null ? RecursiveFill(topLevel) : null;
         }
 
         /// <summary>
@@ -112,7 +107,7 @@ namespace Penguin.Cms.Navigation.Repositories
         /// <returns>The child list of navigation menu items for the parent with the given Id</returns>
         public List<NavigationMenuItem> GetByParentId(int parentId)
         {
-            return this.Where(n => n.Parent != null && n.Parent._Id == parentId).ToList(this.Filter);
+            return this.Where(n => n.Parent != null && n.Parent._Id == parentId).ToList(Filter);
         }
 
         /// <summary>
@@ -122,7 +117,7 @@ namespace Penguin.Cms.Navigation.Repositories
         /// <returns>A navigation menu item with matching URI, or null</returns>
         public NavigationMenuItem GetByUri(string uri)
         {
-            return this.Where(n => n.Uri == uri).FirstOrDefault(this.Filter);
+            return this.Where(n => n.Uri == uri).FirstOrDefault(Filter);
         }
 
         /// <summary>
@@ -132,7 +127,7 @@ namespace Penguin.Cms.Navigation.Repositories
         /// <returns>A root navigation menu item with a matching name, or null</returns>
         public NavigationMenuItem GetRootByName(string name)
         {
-            return this.RecursiveFill(this.Where(n => n.Name == name && n.Parent == null).FirstOrDefault(this.Filter));
+            return RecursiveFill(this.Where(n => n.Name == name && n.Parent == null).FirstOrDefault(Filter));
         }
 
         /// <summary>
@@ -141,18 +136,18 @@ namespace Penguin.Cms.Navigation.Repositories
         /// <returns>A recursive list of root menus</returns>
         public List<NavigationMenuItem> GetRootMenus()
         {
-            return this.Where(n => n.Parent == null).ToList().Where(this.Filter).Select(n => this.RecursiveFill(n)).ToList();
+            return this.Where(n => n.Parent == null).ToList().Where(Filter).Select(n => RecursiveFill(n)).ToList();
         }
 
         private NavigationMenuItem RecursiveFill(NavigationMenuItem navigationMenuItem, List<NavigationMenuItem> AllNavigationMenus = null)
         {
-            List<NavigationMenuItem> Source = AllNavigationMenus ?? this.All.ToList();
+            List<NavigationMenuItem> Source = AllNavigationMenus ?? All.ToList();
 
             ILookup<int, NavigationMenuItem> AllItems = Source.ToLookup(k => k.Parent?._Id ?? 0, v => v);
 
             new List<NavigationMenuItem> { navigationMenuItem }.RecursiveProcess(thisChild =>
             {
-                thisChild.Children = AllItems[thisChild._Id].Where(this.Filter).ToList();
+                thisChild.Children = AllItems[thisChild._Id].Where(Filter).ToList();
 
                 _ = thisChild.Children.OrderBy(n => n.Ordinal);
 
@@ -168,6 +163,16 @@ namespace Penguin.Cms.Navigation.Repositories
             {
                 throw new ArgumentNullException(nameof(navigationMenuItem));
             }
+        }
+
+        public void AddChild(Uri ParentUri, NavigationMenuItem child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public NavigationMenuItem GetByUri(Uri uri)
+        {
+            throw new NotImplementedException();
         }
     }
 }
