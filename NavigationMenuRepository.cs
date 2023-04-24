@@ -164,15 +164,5 @@ namespace Penguin.Cms.Navigation.Repositories
                 throw new ArgumentNullException(nameof(navigationMenuItem));
             }
         }
-
-        public void AddChild(Uri ParentUri, NavigationMenuItem child)
-        {
-            throw new NotImplementedException();
-        }
-
-        public NavigationMenuItem GetByUri(Uri uri)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
